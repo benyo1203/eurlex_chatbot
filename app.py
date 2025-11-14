@@ -11,7 +11,7 @@ import requests
 # A teljes URL valahogy így fog kinézni:
 # "http://46.62.222.149:5678/webhook/12345abc-1234-..."
 # -------------------------------------------------------------------
-N8N_WEBHOOK_URL = "http://46.62.222.149:5678/webhook/http://localhost:5678/webhook-test/fc5f37e5-c275-480b-957b-40e5ad388027"
+N8N_WEBHOOK_URL = "http://46.62.222.149:5678/webhook/http://localhost:5678/webhook/fc5f37e5-c275-480b-957b-40e5ad388027"
 
 
 st.title("🤖 EUR-Lex AI Asszisztens")
@@ -62,3 +62,4 @@ if prompt := st.chat_input("Mit szeretnél tudni az EUR-Lex-ből?"):
         st.markdown(ai_response)
 
     st.session_state.messages.append({"role": "assistant", "content": ai_response})
+
