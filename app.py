@@ -60,12 +60,7 @@ if prompt := st.chat_input("Mit szeretnél tudni az EUR-Lex-ből?"):
         }
     }
     # 2. Kérés küldése az n8n backendnek
-    try:
-        # A JSON payloadnak meg kell egyeznie azzal, amit az n8n vár
-        # Az n8n-ben ezt használjuk: {{ $json.body.question }}
-        # Ezért itt a kulcsnak "question"-nek kell lennie.
-        payload = {"question": prompt}
-        
+    try:        
         # POST kérés küldése a webhook URL-re
         with st.spinner("Keresés a teljes adatbázisban..."):
             response = requests.post(N8N_WEBHOOK_URL, json=payload, timeout=90) # 90 mp timeout
@@ -88,6 +83,7 @@ if prompt := st.chat_input("Mit szeretnél tudni az EUR-Lex-ből?"):
         st.markdown(ai_response)
 
     st.session_state.messages.append({"role": "assistant", "content": ai_response})
+
 
 
 
