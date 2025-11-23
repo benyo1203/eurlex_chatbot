@@ -13,6 +13,23 @@ import requests
 # -------------------------------------------------------------------
 N8N_WEBHOOK_URL = "http://46.62.222.149:5678/webhook/fc5f37e5-c275-480b-957b-40e5ad388027"
 
+# --- OLDALSÁV SZŰRŐK ---
+st.sidebar.header("🔍 Szűrők")
+
+# 1. Dokumentum Típus
+doc_types = ["Összes", "Judgment", "Opinion", "Order"]
+selected_type = st.sidebar.selectbox("Dokumentum Típusa", doc_types)
+
+# 2. Évszám választó
+min_year, max_year = st.sidebar.slider("Időszak", 1950, 2025, (2000, 2025))
+
+# 3. Kulcsszó (Opcionális)
+# Ezt később dinamikusan is betöltheted, most legyen egy egyszerű lista
+filter_keyword = st.sidebar.text_input("Kulcsszó szűrés (pl. Agriculture)")
+
+# --- KÜLDÉS A WEBHOOKNAK ---
+# Amikor a requests.post-ot hívod, tedd bele ezeket is a JSON-be:
+
 
 st.title("🤖 EUR-Lex AI Asszisztens")
 st.caption("A teljes EUR-Lex adatbázisban (~500GB) keresek.")
@@ -33,6 +50,15 @@ if prompt := st.chat_input("Mit szeretnél tudni az EUR-Lex-ből?"):
     st.chat_message("user").markdown(prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
 
+    payload = {
+    "question": user_input,
+    "filters": {
+        "doc_type": None if selected_type == "Összes" else selected_type,
+        "year_start": min_year,
+        "year_end": max_year,
+        "keyword": filter_keyword if filter_keyword else None
+        }
+    }
     # 2. Kérés küldése az n8n backendnek
     try:
         # A JSON payloadnak meg kell egyeznie azzal, amit az n8n vár
@@ -62,6 +88,7 @@ if prompt := st.chat_input("Mit szeretnél tudni az EUR-Lex-ből?"):
         st.markdown(ai_response)
 
     st.session_state.messages.append({"role": "assistant", "content": ai_response})
+
 
 
 
