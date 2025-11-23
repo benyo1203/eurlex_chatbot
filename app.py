@@ -51,7 +51,7 @@ if prompt := st.chat_input("Mit szeretnél tudni az EUR-Lex-ből?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
     payload = {
-    "question": user_input,
+    "question": prompt,
     "filters": {
         "doc_type": None if selected_type == "Összes" else selected_type,
         "year_start": min_year,
@@ -88,6 +88,7 @@ if prompt := st.chat_input("Mit szeretnél tudni az EUR-Lex-ből?"):
         st.markdown(ai_response)
 
     st.session_state.messages.append({"role": "assistant", "content": ai_response})
+
 
 
 
