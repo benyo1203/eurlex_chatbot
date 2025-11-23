@@ -49,15 +49,6 @@ if prompt := st.chat_input("Mit szeretnél tudni az EUR-Lex-ből?"):
     st.chat_message("user").markdown(prompt)
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    payload = {
-    "question": prompt,
-    "filters": {
-        "doc_type": None if selected_type == "Összes" else selected_type,
-        "year_start": min_year,
-        "year_end": max_year,
-        "keyword": filter_keyword if filter_keyword else None
-        }
-    }
     # 2. Kérés küldése az n8n backendnek
     try:        
         # POST kérés küldése a webhook URL-re
@@ -91,6 +82,7 @@ if prompt := st.chat_input("Mit szeretnél tudni az EUR-Lex-ből?"):
         st.markdown(ai_response)
 
     st.session_state.messages.append({"role": "assistant", "content": ai_response})
+
 
 
 
