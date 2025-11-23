@@ -31,8 +31,7 @@ filter_keyword = st.sidebar.text_input("Kulcsszó szűrés (pl. Agriculture)")
 # Amikor a requests.post-ot hívod, tedd bele ezeket is a JSON-be:
 
 
-st.title("🤖 EUR-Lex AI Asszisztens")
-st.caption("A teljes EUR-Lex adatbázisban (~500GB) keresek.")
+st.title("🤖 EUR-Lex Case Law AI Asszisztens")
 
 # Chat előzmények inicializálása
 if "messages" not in st.session_state:
@@ -62,6 +61,15 @@ if prompt := st.chat_input("Mit szeretnél tudni az EUR-Lex-ből?"):
     # 2. Kérés küldése az n8n backendnek
     try:        
         # POST kérés küldése a webhook URL-re
+        payload = {
+            "question": prompt,
+            "filters": {
+                "doc_type": None if selected_type == "Összes" else selected_type,
+                "year_start": min_year,
+                "year_end": max_year,
+                "keyword": filter_keyword if filter_keyword else None
+                }
+        }
         with st.spinner("Keresés a teljes adatbázisban..."):
             response = requests.post(N8N_WEBHOOK_URL, json=payload, timeout=90) # 90 mp timeout
 
@@ -83,6 +91,7 @@ if prompt := st.chat_input("Mit szeretnél tudni az EUR-Lex-ből?"):
         st.markdown(ai_response)
 
     st.session_state.messages.append({"role": "assistant", "content": ai_response})
+
 
 
 
