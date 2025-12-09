@@ -25,13 +25,13 @@ min_year, max_year = st.sidebar.slider("Időszak", 1950, 2025, (2000, 2025))
 
 # 3. Kulcsszó (Opcionális)
 # Ezt később dinamikusan is betöltheted, most legyen egy egyszerű lista
-filter_keyword = st.sidebar.text_input("Kulcsszó szűrés (pl. Agriculture)")
+filter_keyword = st.sidebar.text_input("Kulcsszó szűrés")
 
 # --- KÜLDÉS A WEBHOOKNAK ---
 # Amikor a requests.post-ot hívod, tedd bele ezeket is a JSON-be:
 
 
-st.title("🤖 EUR-Lex Case Law AI Asszisztens")
+st.title("🤖 Jogeset kereső assziszetens")
 
 # Chat előzmények inicializálása
 if "messages" not in st.session_state:
@@ -43,7 +43,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # Felhasználói bevitel kezelése
-if prompt := st.chat_input("Mit szeretnél tudni az EUR-Lex-ből?"):
+if prompt := st.chat_input("Milyen jogesetekkel kapcsolatos kérdésed van?"):
     
     # 1. Felhasználói üzenet megjelenítése
     st.chat_message("user").markdown(prompt)
@@ -61,7 +61,7 @@ if prompt := st.chat_input("Mit szeretnél tudni az EUR-Lex-ből?"):
                 "keyword": filter_keyword if filter_keyword else None
                 }
         }
-        with st.spinner("Keresés a teljes adatbázisban..."):
+        with st.spinner("Keresés..."):
             response = requests.post(N8N_WEBHOOK_URL, json=payload, timeout=90) # 90 mp timeout
 
         # 3. Válasz feldolgozása
@@ -82,6 +82,7 @@ if prompt := st.chat_input("Mit szeretnél tudni az EUR-Lex-ből?"):
         st.markdown(ai_response)
 
     st.session_state.messages.append({"role": "assistant", "content": ai_response})
+
 
 
 
